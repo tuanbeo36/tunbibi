@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang web trái tim</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <style>
+        /* Thiết lập CSS cơ bản */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #FFD1DC; /* Màu hồng pastel nhạt */
+            color: #333;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        /* Phong cách trái tim chính */
+        .heart {
+            width: 100px;
+            height: 100px;
+            background-color: #FF69B4; /* Màu hồng đậm hơn */
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            transform: rotate(-45deg);
+            margin-bottom: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: "";
+            width: 100px;
+            height: 100px;
+            background-color: #FF69B4;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .heart::before {
+            top: -50px;
+            left: 0;
+        }
+
+        .heart::after {
+            left: 50px;
+            top: 0;
+        }
+
+        /* Hiệu ứng khi click vào trái tim */
+        .heart-clicked {
+            transform: scale(0); /* Biến mất */
+        }
+
+        /* Trái tim nhỏ bay ngẫu nhiên */
+        .explosion {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* CSS tạo hình trái tim nhỏ */
+        .heart-small {
+            width: 20px;
+            height: 20px;
+            background-color: #FF69B4;
+            position: absolute;
+            transform: rotate(45deg);
+            /* Tạo hình trái tim */
+            clip-path: polygon(50% 0%, 0% 40%, 50% 100%, 100% 40%);
+            animation: explode 2s forwards;
+        }
+
+        /* Animation bùng nổ các trái tim nhỏ */
+        @keyframes explode {
+            0% {
+                transform: scale(0) translate(0, 0);
+            }
+            100% {
+                transform: scale(1) translate(var(--x), var(--y)); /* Vị trí ngẫu nhiên */
+            }
+        }
+
+        /* Dòng chữ */
+        .message {
+            font-size: 2em;
+            color: white;
+            background-color: #C2185B;
+            padding: 15px 30px;
+            border-radius: 10px;
+            display: none;
+            margin-top: 20px;
+            animation: popIn 1s ease;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="heart" onclick="animateHeart()"></div>
+        <p id="message" class="message">Tunbeo iu Daobi</p>
+    </div>
+
+    <div id="explosion" class="explosion"></div>
+
+    <script>
+        function animateHeart() {
+            // Lẩn trái tim chính
+            const heart = document.querySelector('.heart');
+            heart.classList.add('heart-clicked');
+
+            // Tạo các trái tim nhỏ bay ngẫu nhiên
+            createExplosion();
+
+            // Hiển thị dòng chữ
+            const message = document.getElementById("message");
+            message.style.display = "block";
+        }
+
+        function createExplosion() {
+            const explosionContainer = document.getElementById('explosion');
+            
+            // Tạo 20 trái tim nhỏ
+            for (let i = 0; i < 20; i++) { 
+                const smallHeart = document.createElement('div');
+                smallHeart.classList.add('heart-small');
+
+                // Thiết lập vị trí ngẫu nhiên
+                const randomX = Math.floor(Math.random() * 500) - 250; // Vị trí ngẫu nhiên trên trục X
+                const randomY = Math.floor(Math.random() * 500) - 250; // Vị trí ngẫu nhiên trên trục Y
+
+                smallHeart.style.setProperty('--x', `${randomX}px`);
+                smallHeart.style.setProperty('--y', `${randomY}px`);
+
+                explosionContainer.appendChild(smallHeart);
+            }
+
+            // Sau khi hiệu ứng hoàn thành, xóa tất cả các trái tim nhỏ
+            setTimeout(() => {
+                explosionContainer.innerHTML = '';
+            }, 2000); // 2s (thời gian cho animation)
+        }
+    </script>
+</body>
+</html>
